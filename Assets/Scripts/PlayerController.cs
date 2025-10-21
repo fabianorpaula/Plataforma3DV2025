@@ -32,6 +32,10 @@ public class PlayerController : MonoBehaviour
     public GameObject arma2;
     private TMP_Text textoArma;
 
+
+    //DadosAnimação
+    public Animator animator;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -53,7 +57,7 @@ public class PlayerController : MonoBehaviour
         lookInput = playerInput.actions["Look"].ReadValue<Vector2>();
         isRunning = playerInput.actions["Sprint"].ReadValue<float>() > 0;
         RotatePlayer();
-        RotateCamera();
+        //RotateCamera();
         if (playerInput.actions["Jump"].triggered && isGrounded)
         {
             Jump();
@@ -68,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
     void RotateCamera() 
     {
-        cameraPitch -= lookInput.y * mouseSensitivity;
+        //cameraPitch -= lookInput.y * mouseSensitivity;
         cameraPitch = Mathf.Clamp(cameraPitch, -80f, 80f);
         mainCamera.transform.localEulerAngles =
             new Vector3(cameraPitch, 0, 0);
@@ -117,12 +121,45 @@ public class PlayerController : MonoBehaviour
         { 
             currentSpeed = speed;
         }
+        
 
-        Vector3 displacement =
-                movementDirection * currentSpeed * Time.deltaTime;
+            Vector3 displacement =
+                    movementDirection * currentSpeed * Time.deltaTime;
         
         rb.MovePosition(transform.position + displacement);
+
+        //Velocidade de movimentação em X
+        if (displacement.z!= 0)
+        {
+            animator.SetBool("Andar", true);
+            animator.SetBool("Defender", false);
+        }
+        else
+        {
+            animator.SetBool("Andar", false);
+            Ataque();
+            Defesa();
+        }
     }
+    void Defesa()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            animator.SetBool("Defender", true);
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            animator.SetBool("Defender", false);
+        }
+    }
+    void Ataque()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            animator.SetTrigger("Atacar");
+        }
+    }
+
 
     private void OnDrawGizmos()
     {
@@ -138,8 +175,16 @@ public class PlayerController : MonoBehaviour
     void Dano()
     {
         //Perda de Hp agora é 10 pontos por ataque
-        hp = hp - 10;
-        AtualizaDados();
+        if(animator.GetBool("Defender") == true)
+        {
+            hp = hp - 1;
+        }
+        else
+        {
+            hp = hp - 10;
+        }
+
+            AtualizaDados();
         telaDano.SetActive(true);
         if(hp <= 0)
         {

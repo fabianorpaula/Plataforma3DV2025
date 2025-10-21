@@ -134,6 +134,14 @@ public class ZombieAI : MonoBehaviour
                 TomeiDano(10);
             }
         }
+        //ELE TOCOU NA Espada?
+        if (colidir.gameObject.tag == "Espada")
+        {
+            if (zumbiVivo == true)
+            {
+                TomeiDano(10);
+            }
+        }
     }
 
 
