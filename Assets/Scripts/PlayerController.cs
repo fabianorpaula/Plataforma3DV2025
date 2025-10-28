@@ -3,6 +3,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -35,6 +37,11 @@ public class PlayerController : MonoBehaviour
 
     //DadosAnimação
     public Animator animator;
+
+
+    //Mochila
+    public List<GameObject> Mochila;
+    public List<Image> MochilaVisor;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -253,6 +260,18 @@ public class PlayerController : MonoBehaviour
         if (colidiu.gameObject.tag == "CaixaVitoria")
         {
             SceneManager.LoadScene("Vitoria");
+        }
+        //Objetos Pegaveis
+        if(colidiu.gameObject.tag == "Pegavel")
+        {
+            string nomeObjeto = colidiu.gameObject.
+                GetComponent<Item_Pegavel>().name;
+            Debug.Log(nomeObjeto);
+            Mochila.Add(colidiu.gameObject);
+            int posicaoMochila = Mochila.Count - 1;
+            MochilaVisor[posicaoMochila].sprite = colidiu.gameObject.
+                GetComponent<Item_Pegavel>().spriteItem;
+            colidiu.gameObject.SetActive(false);
         }
     }
 

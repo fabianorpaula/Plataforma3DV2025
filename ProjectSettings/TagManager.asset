@@ -12,6 +12,7 @@ TagManager:
   - ArmaTexto
   - CaixaVitoria
   - Espada
+  - Pegavel
   layers:
   - Default
   - TransparentFX
