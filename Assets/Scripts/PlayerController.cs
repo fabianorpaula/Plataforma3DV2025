@@ -53,14 +53,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        movementInput = playerInput.actions["Move"].ReadValue<Vector2>();
-        lookInput = playerInput.actions["Look"].ReadValue<Vector2>();
-        isRunning = playerInput.actions["Sprint"].ReadValue<float>() > 0;
-        RotatePlayer();
-        //RotateCamera();
-        if (playerInput.actions["Jump"].triggered && isGrounded)
+        if (animator.GetBool("Vivo") == true)
         {
-            Jump();
+            movementInput = playerInput.actions["Move"].ReadValue<Vector2>();
+            lookInput = playerInput.actions["Look"].ReadValue<Vector2>();
+            isRunning = playerInput.actions["Sprint"].ReadValue<float>() > 0;
+            RotatePlayer();
+            //RotateCamera();
+            if (playerInput.actions["Jump"].triggered && isGrounded)
+            {
+                Jump();
+            }
         }
     }
 
@@ -86,13 +89,16 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        isGrounded = Physics.Raycast(
+        if (animator.GetBool("Vivo") == true)
+        {
+            isGrounded = Physics.Raycast(
                 footPosition.position,
                 Vector3.down,
                 0.05f);
-        Move();
-        AtualizaDados();
-        TrocarArma();
+            Move();
+            AtualizaDados();
+            TrocarArma();
+        }
     }
 
     void Move() 
@@ -174,27 +180,31 @@ public class PlayerController : MonoBehaviour
 
     void Dano()
     {
-        //Perda de Hp agora é 10 pontos por ataque
-        if(animator.GetBool("Defender") == true)
+        if (animator.GetBool("Vivo") == true)
         {
-            hp = hp - 1;
-        }
-        else
-        {
-            hp = hp - 10;
-        }
-
+            animator.SetTrigger("Dano");
+            //Perda de Hp agora é 10 pontos por ataque
+            if (animator.GetBool("Defender") == true)
+            {
+                hp = hp - 1;
+            }
+            else
+            {
+                hp = hp - 10;
+            }
             AtualizaDados();
-        telaDano.SetActive(true);
-        if(hp <= 0)
-        {
-            Morrer();
+            telaDano.SetActive(true);
+            if (hp <= 0)
+            {
+                animator.SetBool("Vivo", false);
+                Morrer();
+            }
         }
     }
 
     void Morrer()
     {
-        SceneManager.LoadScene("GameOver");
+        //SceneManager.LoadScene("GameOver");
     }
     void GanharVida()
     {
@@ -203,7 +213,7 @@ public class PlayerController : MonoBehaviour
         {
             hp = 100;
         }
-        AtualizaDados();
+        //AtualizaDados();
     }
 
     void GanharMunicao()
@@ -214,13 +224,13 @@ public class PlayerController : MonoBehaviour
 
     void AtualizaDados()
     {
-        textoHp.text = hp.ToString()+"/100";
+       textoHp.text = hp.ToString()+"/100";
 
-        string pmaxMunicao = armaUsada.GetComponent<Arma>().
-            maxMunicao.ToString();
-        string pmunicao = armaUsada.GetComponent<Arma>().
-            municao.ToString();
-        textoArma.text = pmunicao+"/"+pmaxMunicao;
+        /*string pmaxMunicao = armaUsada.GetComponent<Arma>().
+           maxMunicao.ToString();
+       string pmunicao = armaUsada.GetComponent<Arma>().
+           municao.ToString();
+       textoArma.text = pmunicao+"/"+pmaxMunicao;*/
     }
 
     private void OnTriggerEnter(Collider colidiu)
@@ -263,5 +273,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void AtivarArma()
+    {
+        armaUsada.GetComponent<MeshCollider>().enabled = true;
+    }
+
+    public void DesativarArma()
+    {
+        armaUsada.GetComponent<MeshCollider>().enabled = false;
+    }
 
 }
