@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.Rendering.LookDev;
+using NUnit.Framework.Constraints;
 
 public class PlayerController : MonoBehaviour
 {
@@ -105,8 +107,9 @@ public class PlayerController : MonoBehaviour
                 0.05f);
             Move();
             AtualizaDados();
-            TrocarArma();
+            //TrocarArma();
             PegarMeuItem();
+            UsarItem();
         }
     }
 
@@ -347,6 +350,36 @@ public class PlayerController : MonoBehaviour
     public void DesativarArma()
     {
         armaUsada.GetComponent<MeshCollider>().enabled = false;
+    }
+
+    void UsarItem()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            string nomeItem = Mochila[0].
+                GetComponent<Item_Pegavel>().nomeItem;
+            Debug.Log(nomeItem);
+            EfeitoItem(nomeItem);
+            Mochila.Remove(Mochila[0]);
+            MochilaVisor[0].sprite = null;
+        }
+    }
+
+    void EfeitoItem(string nomeItem)
+    {
+        switch (nomeItem)
+        {
+            case "Maçã":
+                break;
+            case "Carne":
+                break;
+            case "Peixe":
+                break;
+            case "Poção Vida":
+                break;
+            case "Poção Magia":
+                break;
+        }
     }
 
 }
