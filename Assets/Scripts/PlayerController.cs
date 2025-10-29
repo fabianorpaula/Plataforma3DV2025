@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     //Mochila
     public List<GameObject> Mochila;
     public List<Image> MochilaVisor;
+    public bool podePegar = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -105,6 +106,7 @@ public class PlayerController : MonoBehaviour
             Move();
             AtualizaDados();
             TrocarArma();
+            PegarMeuItem();
         }
     }
 
@@ -146,6 +148,7 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("Andar", true);
             animator.SetBool("Defender", false);
+            podePegar = false;
         }
         else
         {
@@ -172,6 +175,8 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("Atacar");
         }
     }
+
+
 
 
     private void OnDrawGizmos()
@@ -240,6 +245,16 @@ public class PlayerController : MonoBehaviour
        textoArma.text = pmunicao+"/"+pmaxMunicao;*/
     }
 
+
+    void PegarMeuItem()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            animator.SetTrigger("Pegar");
+            podePegar = true;
+        }
+    }
+
     private void OnTriggerEnter(Collider colidiu)
     {
         if(colidiu.gameObject.tag == "AtaqueInimigo")
@@ -262,12 +277,34 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene("Vitoria");
         }
         //Objetos Pegaveis
+
         if(colidiu.gameObject.tag == "Pegavel")
         {
-            if (Mochila.Count < MochilaVisor.Count)
+            if (Mochila.Count < MochilaVisor.Count && podePegar == true)
             {
+                //Fala o Nome do Objeto que eu Peguei
+                string nomeObjeto = colidiu.gameObject.
+                    GetComponent<Item_Pegavel>().name;
+                Debug.Log(nomeObjeto);
+                //Adiciono na Mochila
+                Mochila.Add(colidiu.gameObject);
+                //Pego posicao Dele
+                int posicaoMochila = Mochila.Count - 1;
+                //Mostro No Viso
+                MochilaVisor[posicaoMochila].sprite = colidiu.gameObject.
+                    GetComponent<Item_Pegavel>().spriteItem;
+                //Desativo No Jogo
+                colidiu.gameObject.SetActive(false);
+            }
+        }
+    }
 
-
+    private void OnTriggerStay(Collider colidiu)
+    {
+        if (colidiu.gameObject.tag == "Pegavel")
+        {
+            if (Mochila.Count < MochilaVisor.Count && podePegar == true)
+            {
                 //Fala o Nome do Objeto que eu Peguei
                 string nomeObjeto = colidiu.gameObject.
                     GetComponent<Item_Pegavel>().name;
@@ -286,7 +323,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    void TrocarArma()
+        void TrocarArma()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
