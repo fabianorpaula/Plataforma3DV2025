@@ -264,19 +264,24 @@ public class PlayerController : MonoBehaviour
         //Objetos Pegaveis
         if(colidiu.gameObject.tag == "Pegavel")
         {
-            //Fala o Nome do Objeto que eu Peguei
-            string nomeObjeto = colidiu.gameObject.
-                GetComponent<Item_Pegavel>().name;
-            Debug.Log(nomeObjeto);
-            //Adiciono na Mochila
-            Mochila.Add(colidiu.gameObject);
-            //Pego posicao Dele
-            int posicaoMochila = Mochila.Count - 1;
-            //Mostro No Viso
-            MochilaVisor[posicaoMochila].sprite = colidiu.gameObject.
-                GetComponent<Item_Pegavel>().spriteItem;
-            //Desativo No Jogo
-            colidiu.gameObject.SetActive(false);
+            if (Mochila.Count < MochilaVisor.Count)
+            {
+
+
+                //Fala o Nome do Objeto que eu Peguei
+                string nomeObjeto = colidiu.gameObject.
+                    GetComponent<Item_Pegavel>().name;
+                Debug.Log(nomeObjeto);
+                //Adiciono na Mochila
+                Mochila.Add(colidiu.gameObject);
+                //Pego posicao Dele
+                int posicaoMochila = Mochila.Count - 1;
+                //Mostro No Viso
+                MochilaVisor[posicaoMochila].sprite = colidiu.gameObject.
+                    GetComponent<Item_Pegavel>().spriteItem;
+                //Desativo No Jogo
+                colidiu.gameObject.SetActive(false);
+            }
         }
     }
 
