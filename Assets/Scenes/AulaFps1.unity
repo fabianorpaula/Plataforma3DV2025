@@ -1497,6 +1497,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie
       objectReference: {fileID: 0}
+    - target: {fileID: 2012979682667502298, guid: a74b8a6a05b924e489d6c0826b2c52e3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3340795709871108519, guid: a74b8a6a05b924e489d6c0826b2c52e3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 397.96024
@@ -2126,6 +2130,7 @@ MonoBehaviour:
   - {fileID: 158767101}
   - {fileID: 1268800391}
   - {fileID: 220885888}
+  podePegar: 0
 --- !u!114 &1066625642
 MonoBehaviour:
   m_ObjectHideFlags: 0

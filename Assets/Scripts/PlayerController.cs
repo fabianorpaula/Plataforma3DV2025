@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.Rendering.LookDev;
 using NUnit.Framework.Constraints;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
@@ -146,7 +147,9 @@ public class PlayerController : MonoBehaviour
         
         rb.MovePosition(transform.position + displacement);
 
-        //Velocidade de movimentação em X
+        
+
+
         if (displacement.z!= 0)
         {
             animator.SetBool("Andar", true);
@@ -160,6 +163,9 @@ public class PlayerController : MonoBehaviour
             Defesa();
         }
     }
+
+    
+
     void Defesa()
     {
         if (Input.GetMouseButtonDown(1))
@@ -360,10 +366,43 @@ public class PlayerController : MonoBehaviour
                 GetComponent<Item_Pegavel>().nomeItem;
             Debug.Log(nomeItem);
             EfeitoItem(nomeItem);
-            Mochila.Remove(Mochila[0]);
-            MochilaVisor[0].sprite = null;
+            Mochila.RemoveAt(0);
+            OrganizarMochila();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            string nomeItem = Mochila[1].
+                GetComponent<Item_Pegavel>().nomeItem;
+            Debug.Log(nomeItem);
+            EfeitoItem(nomeItem);
+            Mochila.RemoveAt(1);
+            OrganizarMochila();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            string nomeItem = Mochila[2].
+                GetComponent<Item_Pegavel>().nomeItem;
+            Debug.Log(nomeItem);
+            EfeitoItem(nomeItem);
+            Mochila.RemoveAt(2);
+            OrganizarMochila();
+        }
+
+    }
+
+    void OrganizarMochila()
+    {
+        for (int i = 0; i < MochilaVisor.Count; i++)
+        {
+            MochilaVisor[i].sprite = null;
+        }
+        for (int i = 0; i < Mochila.Count; i++)
+        {
+            Sprite meuSprite = Mochila[i].GetComponent<Item_Pegavel>().spriteItem;
+            MochilaVisor[i].sprite = meuSprite;
         }
     }
+
 
     void EfeitoItem(string nomeItem)
     {
