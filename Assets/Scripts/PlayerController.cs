@@ -94,6 +94,7 @@ public class PlayerController : MonoBehaviour
 
     void Jump() 
     {
+        animator.SetTrigger("Pular");
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         isGrounded = false;
     }
@@ -112,6 +113,7 @@ public class PlayerController : MonoBehaviour
             PegarMeuItem();
             UsarItem();
         }
+        
     }
 
     void Move() 
@@ -162,9 +164,20 @@ public class PlayerController : MonoBehaviour
             Ataque();
             Defesa();
         }
+        AtualizarMovimento(displacement);
     }
 
-    
+    void AtualizarMovimento(Vector3 displacement)
+    {
+        Vector3 localVel = transform.InverseTransformDirection(displacement);
+        float velX = localVel.x *10;
+        float velZ = localVel.z *10;
+        float velY = localVel.y *10;
+
+        animator.SetFloat("VelX", velX);
+        animator.SetFloat("VelZ", velZ);
+        animator.SetFloat("VelY", velY);
+    }
 
     void Defesa()
     {
@@ -387,9 +400,7 @@ public class PlayerController : MonoBehaviour
             Mochila.RemoveAt(2);
             OrganizarMochila();
         }
-
     }
-
     void OrganizarMochila()
     {
         for (int i = 0; i < MochilaVisor.Count; i++)
